@@ -18,6 +18,21 @@ def part1(template, rep_map):
     common = c.most_common()
     print(common[0][1] - common[-1][1])
 
+def count_tokens(template, token_map):
+    count_map = defaultdict(int)
+    for t,v in token_map.items():
+        count_map[t[0]]+=(v/2)
+        count_map[t[1]]+=(v/2)
+    
+    count_map[template[-1]] += 0.5
+    
+    max1,min1 = -1.0, float("inf")
+    for c,v in count_map.items():
+        max1 = max(v,max1)
+        min1 = min(v,min1)
+
+    print(max1,min1,max1-min1)
+
 def main():
     """main func, get coords"""
     template = ""
@@ -44,6 +59,8 @@ def main():
     print(token_map)
     steps = 40
     for step in range(steps):
+        if step == 10:
+            count_tokens(template, token_map)
         nm = defaultdict(int)
         for t,v in token_map.items():
             nt = rep_map.get(t)
@@ -53,20 +70,9 @@ def main():
         token_map = nm
 
     print(token_map)
+    count_tokens(template,token_map)
 
-    count_map = defaultdict(int)
-    for t,v in token_map.items():
-        count_map[t[0]]+=(v/2)
-        count_map[t[1]]+=(v/2)
     
-    count_map[template[-1]] += 0.5
-    
-    max1,min1 = -1.0, float("inf")
-    for c,v in count_map.items():
-        max1 = max(v,max1)
-        min1 = min(v,min1)
-
-    print(max1,min1,max1-min1)
 
 if __name__ == "__main__":
     main()
