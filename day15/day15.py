@@ -1,15 +1,7 @@
 import sys
 from collections import defaultdict
 import heapq
-
-def bounded(i,j,shape):
-    return i >= 0 and i < shape[0] and j >= 0 and j < shape[1]
-
-def neighbours(i,j,shape):
-    for o in [(i-1,j), (i+1,j), (i,j-1), (i,j+1)]:
-        if bounded(o[0],o[1],shape):
-            yield o
-
+import numba
 
 def path(shape,grid):
     """Runs Dijkstra's shortest path!"""
@@ -21,15 +13,16 @@ def path(shape,grid):
         if curr > vertices[node]:
             continue
 
-        for i,j in neighbours(node[0],node[1],shape):
-            weight = grid[i][j]
-            distance = curr + weight
-            if distance < vertices[(i,j)]:
-                vertices[(i,j)] = distance
-                heapq.heappush(pq,(distance,(i,j)))
+        for i,j in ((node[0]-1,node[1]), (node[0]+1,node[1]), (node[0],node[1]-1), (node[0],node[1]+1)):
+            if 0 <= i < shape[0] and 0 <= j < shape[1]:
+                distance = curr + grid[i][j]
+                if distance < vertices[(i,j)]:
+                    vertices[(i,j)] = distance
+                    heapq.heappush(pq,(distance,(i,j)))
     
     print(vertices[(shape[0]-1,shape[1]-1)])
-            
+
+path_autojit = numba.jit(path)
 
 def tile(shape, grid, factor):
     """tile grid, handle inserts, etc etc"""
@@ -68,7 +61,7 @@ def main():
     new_grid = tile(shape,grid,5)
     new_shape = len(new_grid), len(new_grid[0])
 
-    path(new_shape,new_grid)
+    path_autojit(new_shape,new_grid)
 
 
 if __name__ == "__main__":
