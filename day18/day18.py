@@ -127,21 +127,25 @@ def delete_node(parent_node, direction):
     setattr(parent_node, direction, 0)
 
 
-def explode_nodes(tree, direction="", done=False):
+def explode_nodes(tree, direction=""):
     if isinstance(tree, Node):
         if (
             tree.level == 4
             and isinstance(tree.left, int)
             and isinstance(tree.right, int)
-            and not done
         ):
             push_node(tree.parent, tree, "left", tree.left)
             push_node(tree.parent, tree, "right", tree.right)
             delete_node(tree.parent, direction)
-            return True
-        else:
-            left = explode_nodes(tree.left, "left", done)
-            return left if left else explode_nodes(tree.right, "right", done)
+
+        explode_nodes(
+            tree.left,
+            "left",
+        )
+        explode_nodes(
+            tree.right,
+            "right",
+        )
 
 
 def split_num(val):
