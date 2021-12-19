@@ -113,13 +113,6 @@ def main():
             if not found:
                 q.append(i)
 
-            # if rotation >= 0:
-            #     scanner.append((i,translation))
-            #     matchingBeacons = set( itertools.chain.from_iterable( distances[d][:2] for d in matchingDistances ) )
-            #     toAdd = [ b for b in beacons if b not in matchingBeacons ]
-            #     translated = [ translate_vector(v,translation) for v in rotations(toAdd)[rotation] ]
-            #     composite.extend(translated)
-            #     compositeDistances = { distance(i,j) : ( i, j, diff_vector(i,j) ) for i,j in itertools.permutations(composite,2)}
         else:
             q.append(i)
 
